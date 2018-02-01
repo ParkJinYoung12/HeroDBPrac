@@ -4,9 +4,10 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 
-import carDBPrac.CarInfo;
+
 
 public class HeroDAO {
 	private static final String ORACLE_DRIVER = "oracle.jdbc.driver.OracleDriver";
@@ -17,20 +18,15 @@ public class HeroDAO {
 	private Connection conn =null;
 	private PreparedStatement pstmt =null;
 	private ResultSet rs = null;
-	
-	
-	
-	
-	
-	
-	public ArrayList<HeroInfo> getCarInfoList() throws Exception{
-		ArrayList<HeroInfo> list = new ArrayList<>();
+
+	public ArrayList<HeroInfo> getHeroInfoList() throws Exception{
+		ArrayList<HeroInfo> list = new ArrayList<HeroInfo>();
 		
 		try {
 			//dbms 접속정보 읽어오기
 			conn=DriverManager.getConnection(ORACLE_URL,ORACLE_USER_ID,ORACLE_USER_PW);
 			//1.sql문을 String으로 준비
-			String sql = " select * from carInfo"; //리터럴에 ; 이게(세미콜론) 들어가면 안된다 
+			String sql = "select * from heroInfo"; //리터럴에 ; 이게(세미콜론) 들어가면 안된다 
 			//2.쿼리 실행 준비
 			pstmt = conn.prepareStatement(sql);
 			//3.실행 결과를 ResultSet 객체에 담는다.
@@ -41,8 +37,8 @@ public class HeroDAO {
 				HeroInfo cInfo=new HeroInfo();
 				cInfo.setCiNum(rs.getInt(1));
 				cInfo.setCiName(rs.getString(2));
-				cInfo.setCiPower(rs.getString(3));
-				cInfo.setCiSpeed(rs.getInt(4));				
+				cInfo.setCiFower(rs.getInt(3));
+				cInfo.setCiSpeed(rs.getInt(4));
 				list.add(cInfo);
 				
 			}
@@ -58,4 +54,44 @@ public class HeroDAO {
 		return list;
 	}
 
+	
+	public HeroDetailInfo getHeroDetailInfo() throws Exception {
+		HeroDetailInfo hdi=new HeroDetailInfo();
+		try {
+			//dbms 접속정보 읽어오기
+			conn=DriverManager.getConnection(ORACLE_URL,ORACLE_USER_ID,ORACLE_USER_PW);
+			//1.sql문을 String으로 준비
+			String sql = "select * from heroInfo"; //리터럴에 ; 이게(세미콜론) 들어가면 안된다 
+			//2.쿼리 실행 준비
+			pstmt = conn.prepareStatement(sql);
+			//3.실행 결과를 ResultSet 객체에 담는다.
+			rs=pstmt.executeQuery();
+			
+			if(rs.next()) {
+				
+				hdi=new HeroDetailInfo();
+				
+				hdi.setCiName(rs.getString(2));
+				hdi.setComment(rs.getString(5));
+							
+			}
+			
+		} catch (Exception e) {
+			
+		}finally {
+			conn.close();
+			pstmt.close();
+			rs.close();
+		}
+		
+		
+		
+		return hdi;
+		
+	}
+	
+	
+	
+	
+	
 } //end class 
