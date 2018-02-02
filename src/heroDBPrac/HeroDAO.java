@@ -89,6 +89,36 @@ public class HeroDAO {
 		return hdi;
 		
 	}
+
+
+	public void insertHeroDetail(HeroDetailInfo hdi)throws Exception {
+		try {
+			//dbms 접속정보 읽어오기
+			conn=DriverManager.getConnection(ORACLE_URL,ORACLE_USER_ID,ORACLE_USER_PW);
+			//1.sql문을 String으로 준비
+			String sql = "insert into heroInfo (ciNum,ciName,cipower,cispeed,CICOMMENT) values (seq_carInfo_ciNum.nextval,?,?,?,?)"; //리터럴에 ; 이게(세미콜론) 들어가면 안된다 
+			//2.쿼리 실행 준비
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, hdi.getCiName());
+			pstmt.setInt(2, hdi.getCiFower());
+			pstmt.setInt(3, hdi.getCiSpeed());
+			pstmt.setString(4,hdi.getComment());
+			
+		 // 첫번째 물음표 쿼리에 대한 세팅값
+			//3.실행 결과를 ResultSet 객체에 담는다.
+		pstmt.executeUpdate();/*여기 바꿀꺼임~~~~~~~~~~*/
+			//결과로 나온 데이터가  1건있으면if 구문 블록 실행 
+			
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}finally {
+			conn.close();
+			pstmt.close();
+			
+		}
+		
+	}//메소드 끝
 	
 	
 	
